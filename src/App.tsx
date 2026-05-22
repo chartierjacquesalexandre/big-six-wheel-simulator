@@ -61,6 +61,8 @@ function App() {
     );
   const visualStopOrder = useDefaultStopOrder ? defaultWheelStopOrder : undefined;
   const totalBet = Object.values(bets).reduce((total, amount) => total + amount, 0);
+  const lastBetsTotal = Object.values(lastBets).reduce((total, amount) => total + amount, 0);
+  const canRestoreLastBets = lastBetsTotal > 0 && lastBetsTotal <= balance;
   const latestRound = useRef({
     bets,
     totalBet,
@@ -258,8 +260,8 @@ function App() {
                 selectedChip={selectedChip}
                 balance={balance}
                 totalBet={totalBet}
-                isSpinning={isSpinning}
                 canSpin={roundPhase === "betting"}
+                canRestoreLastBets={canRestoreLastBets}
                 roundPhase={roundPhase}
                 countdown={countdown}
                 winningBetId={winningBetId}

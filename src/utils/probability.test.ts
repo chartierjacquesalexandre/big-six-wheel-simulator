@@ -20,6 +20,18 @@ describe("probability utilities", () => {
     expect(stops.filter((stop) => stop.label === "1")).toHaveLength(26);
   });
 
+  it("normalizes edited stop counts before calculating odds and spin stops", () => {
+    const editedWheel = [
+      { id: "one", label: "1", pays: 1, stops: 2.8, color: "#58b947" },
+      { id: "three", label: "3", pays: 3, stops: -4, color: "#12b8c9" },
+      { id: "six", label: "6", pays: 6, stops: Number.NaN, color: "#f1cf2d" },
+    ];
+
+    expect(getTotalStops(editedWheel)).toBe(2);
+    expect(calculateWheelMath(editedWheel).map((row) => row.stops)).toEqual([2, 0, 0]);
+    expect(buildStopArray(editedWheel)).toHaveLength(2);
+  });
+
   it("selects a deterministic weighted result", () => {
     expect(selectWeightedResult(defaultWheel, undefined, () => 0).label).toBe("1");
     expect(selectWeightedResult(defaultWheel, undefined, () => 0.99).label).toBe("Joker");

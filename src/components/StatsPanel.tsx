@@ -26,7 +26,13 @@ export function StatsPanel({ stats, lastDelta, mostFrequentResult, onReset }: Pr
           <p className="eyebrow">Session statistics</p>
           <h2 className="section-title">Tracker</h2>
         </div>
-        <button className="icon-button" onClick={onReset} title="Reset session">
+        <button
+          className="icon-button"
+          onClick={onReset}
+          title="Reset session"
+          aria-label="Reset session"
+          type="button"
+        >
           <RefreshCcw className="h-5 w-5" />
         </button>
       </div>

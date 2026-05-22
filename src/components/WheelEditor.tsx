@@ -20,7 +20,7 @@ export function WheelEditor({ wheel, onChange, onRestore }: Props) {
           <p className="eyebrow">Optional configuration</p>
           <h2 className="section-title">Edit wheel</h2>
         </div>
-        <button className="secondary-button" onClick={onRestore}>
+        <button className="secondary-button" onClick={onRestore} type="button">
           <RotateCcw className="h-4 w-4" />
           Restore defaults
         </button>

@@ -30,7 +30,13 @@ export function Header({ soundEnabled, onToggleSound }: Props) {
             <BadgeDollarSign className="mb-2 h-5 w-5" />
             1,000 credits
           </div>
-          <button className="sound-toggle" onClick={onToggleSound} type="button">
+          <button
+            className="sound-toggle"
+            onClick={onToggleSound}
+            type="button"
+            aria-pressed={soundEnabled}
+            aria-label={soundEnabled ? "Turn sound off" : "Turn sound on"}
+          >
             {soundEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
             {soundEnabled ? "Sound on" : "Sound off"}
           </button>

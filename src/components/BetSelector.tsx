@@ -9,8 +9,8 @@ type Props = {
   selectedChip: number;
   balance: number;
   totalBet: number;
-  isSpinning: boolean;
   canSpin: boolean;
+  canRestoreLastBets: boolean;
   roundPhase: "betting" | "spinning" | "result";
   countdown: number;
   winningBetId?: string;
@@ -35,8 +35,8 @@ export function BetSelector({
   selectedChip,
   balance,
   totalBet,
-  isSpinning,
   canSpin,
+  canRestoreLastBets,
   roundPhase,
   countdown,
   winningBetId,
@@ -46,6 +46,8 @@ export function BetSelector({
   onClearBets,
   onRestoreLastBets,
 }: Props) {
+  const canPlaceSelectedChip = canSpin && totalBet + selectedChip <= balance;
+
   const renderChipStack = (amount: number, label: string) => {
     const visibleChips = Math.min(4, Math.max(1, Math.ceil(amount / 25)));
 
@@ -92,7 +94,9 @@ export function BetSelector({
                 className={`bet-target bet-target-${slice.id} ${winningBetId === slice.id && lastWinPayout > 0 ? "bet-target-win" : ""} ${getBetTone(slice)}`}
                 key={slice.id}
                 onClick={() => onPlaceBet(slice.id)}
-                disabled={!canSpin}
+                disabled={!canPlaceSelectedChip}
+                type="button"
+                aria-label={`Bet ${selectedChip} credits on ${slice.label}. Pays ${slice.pays} to 1.${amount > 0 ? ` Current bet ${amount} credits.` : ""}`}
                 style={{ "--target-color": slice.color } as React.CSSProperties}
               >
                 <span className={`bet-target-symbol ${isWord ? "bet-target-word" : ""}`}>
@@ -112,8 +116,10 @@ export function BetSelector({
             className={`casino-chip ${selectedChip === value ? "casino-chip-active" : ""}`}
             key={value}
             onClick={() => onChipChange(value)}
-            disabled={!canSpin}
+            disabled={!canSpin || totalBet + value > balance}
             type="button"
+            aria-pressed={selectedChip === value}
+            aria-label={`Select ${value} credit chip`}
           >
             <span>{value}</span>
           </button>
@@ -121,22 +127,32 @@ export function BetSelector({
       </div>
 
       <div className="console-actions">
-        <button className="secondary-button" disabled={!canSpin} onClick={onClearBets} type="button">
+        <button
+          className="secondary-button"
+          disabled={!canSpin || totalBet === 0}
+          onClick={onClearBets}
+          type="button"
+        >
           <Trash2 className="h-4 w-4" />
           Clear bets
         </button>
-        <button className="secondary-button" disabled={!canSpin} onClick={onRestoreLastBets} type="button">
+        <button
+          className="secondary-button"
+          disabled={!canSpin || !canRestoreLastBets}
+          onClick={onRestoreLastBets}
+          type="button"
+        >
           <RotateCcw className="h-4 w-4" />
           Repeat last
         </button>
-        <button className="primary-button console-spin round-status" type="button">
+        <div className="primary-button console-spin round-status" role="status" aria-live="polite">
           {roundPhase === "betting" && <Clock3 className="h-5 w-5" />}
           {roundPhase === "spinning" && <Sparkles className="h-5 w-5 animate-pulse" />}
           {roundPhase === "result" && <Clock3 className="h-5 w-5" />}
           {roundPhase === "betting" && `Bets close in ${countdown}s`}
           {roundPhase === "spinning" && "Wheel spinning"}
           {roundPhase === "result" && `Next bets in ${countdown}s`}
-        </button>
+        </div>
       </div>
     </section>
   );

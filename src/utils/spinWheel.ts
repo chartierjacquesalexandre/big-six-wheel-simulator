@@ -1,4 +1,5 @@
 import type { WheelSlice } from "../data/defaultWheel";
+import { normalizeStopCount } from "./probability";
 
 export type WheelStop = WheelSlice & {
   stopIndex: number;
@@ -22,7 +23,7 @@ export const buildStopArray = (wheel: WheelSlice[], stopOrder?: string[]): Wheel
   }
 
   return wheel.flatMap((slice) =>
-    Array.from({ length: Math.max(0, slice.stops) }, (_, index) => ({
+    Array.from({ length: normalizeStopCount(slice.stops) }, (_, index) => ({
       ...slice,
       stopIndex: index,
       globalIndex: 0,
