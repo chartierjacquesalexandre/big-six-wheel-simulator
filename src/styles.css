@@ -1,0 +1,398 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    overflow-x: hidden;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply min-w-0 rounded-2xl border border-white/10 bg-slate-950/55 p-4 shadow-casino backdrop-blur sm:p-5;
+  }
+
+  .eyebrow {
+    @apply text-xs font-black uppercase tracking-[0.2em] text-amber-300;
+  }
+
+  .section-title {
+    @apply mt-1 text-2xl font-black text-white;
+  }
+
+  .primary-button,
+  .secondary-button,
+  .icon-button {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl font-black transition disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .primary-button {
+    @apply w-full bg-amber-300 px-5 py-3 text-slate-950 shadow-glow hover:bg-amber-200 sm:w-auto;
+  }
+
+  .secondary-button {
+    @apply border border-white/10 bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/15;
+  }
+
+  .icon-button {
+    @apply h-11 w-11 border border-white/10 bg-white/10 text-white hover:bg-white/15;
+  }
+
+  .sound-toggle {
+    @apply col-span-2 inline-flex items-center justify-center gap-2 rounded-xl border border-cyan-300/20 bg-cyan-400/10 p-3 font-black text-cyan-100 transition hover:bg-cyan-400/15 md:col-span-1 md:min-w-28 md:flex-col;
+  }
+
+  .field {
+    @apply h-11 w-full rounded-xl border border-white/10 bg-slate-900/90 px-3 text-sm font-bold text-white outline-none transition focus:border-amber-300;
+  }
+
+  .metric {
+    @apply rounded-xl border border-white/10 bg-white/5 p-3;
+  }
+
+  .metric span {
+    @apply block text-xs font-bold uppercase tracking-wide text-slate-400;
+  }
+
+  .metric strong {
+    @apply mt-1 block text-lg font-black text-white;
+  }
+
+  .ad-slot {
+    @apply rounded-2xl border border-dashed border-white/15 bg-white/5 px-4 py-5 text-center text-xs font-bold uppercase tracking-[0.18em] text-slate-500;
+  }
+
+  .wheel-stage {
+    @apply relative mx-auto flex aspect-square w-full min-w-0 max-w-[860px] items-center justify-center rounded-full bg-black/35 p-4 shadow-glow;
+    transform: perspective(1100px) rotateX(4deg);
+    transform-style: preserve-3d;
+  }
+
+  .wheel-stage::before {
+    content: "";
+    @apply absolute inset-1 rounded-full border-[18px] border-black shadow-casino;
+    box-shadow:
+      0 34px 80px rgba(0, 0, 0, 0.65),
+      inset 0 14px 24px rgba(255, 255, 255, 0.08),
+      inset 0 -24px 38px rgba(0, 0, 0, 0.75);
+  }
+
+  .wheel-stage::after {
+    content: "";
+    @apply pointer-events-none absolute inset-8 z-10 rounded-full;
+    background:
+      radial-gradient(circle at 38% 22%, rgba(255, 255, 255, 0.2), transparent 18%),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.16), transparent 32%, rgba(0, 0, 0, 0.18) 76%);
+  }
+
+  .wheel-svg {
+    @apply relative z-10 h-full w-full transition-transform duration-[7000ms] ease-out;
+    filter: drop-shadow(0 30px 24px rgba(0, 0, 0, 0.42));
+  }
+
+  .pointer {
+    @apply absolute left-1/2 top-0 z-30 h-0 w-0 -translate-x-1/2 border-l-[18px] border-r-[18px] border-t-[48px] border-l-transparent border-r-transparent border-t-red-500 drop-shadow-[0_8px_8px_rgba(0,0,0,0.5)];
+  }
+
+  .wheel-label {
+    font-size: 15px;
+    font-weight: 1000;
+    paint-order: stroke;
+    stroke: rgba(0, 0, 0, 0.62);
+    stroke-width: 3px;
+  }
+
+  .wheel-label-outer {
+    font-size: 15px;
+  }
+
+  .wheel-label-wide {
+    font-size: 12px;
+  }
+
+  .wheel-label-inner {
+    font-size: 13px;
+    stroke-width: 3px;
+  }
+
+  .wheel-center-title {
+    fill: #f8d568;
+    font-size: 36px;
+    font-weight: 1000;
+    letter-spacing: 0;
+  }
+
+  .wheel-center-subtitle {
+    fill: #cbd5e1;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0;
+  }
+
+  .result-card {
+    @apply rounded-2xl border border-amber-300/20 bg-gradient-to-br from-slate-900 to-black p-5 shadow-glow;
+  }
+
+  .result-strip {
+    @apply flex flex-col justify-between gap-3 sm:flex-row sm:items-center;
+  }
+
+  .spin-state {
+    @apply rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-amber-200;
+  }
+
+  .player-console {
+    @apply min-w-0 overflow-hidden rounded-2xl border border-cyan-300/20 bg-slate-950 shadow-casino;
+  }
+
+  .casino-topbar {
+    @apply grid grid-cols-2 gap-px bg-black/80 p-2 text-xs uppercase tracking-wide text-slate-400;
+  }
+
+  .casino-topbar div {
+    @apply rounded-lg bg-gradient-to-b from-slate-800 to-black px-3 py-2;
+  }
+
+  .casino-topbar strong {
+    @apply mt-1 block text-base font-black text-white;
+  }
+
+  .console-felt {
+    @apply relative p-4;
+    background:
+      radial-gradient(circle at 50% 8%, rgba(59, 130, 246, 0.42), transparent 28%),
+      radial-gradient(circle at 50% 45%, rgba(45, 212, 191, 0.22), transparent 58%),
+      linear-gradient(135deg, #083344 0%, #0f766e 48%, #0b3b4a 100%);
+  }
+
+  .win-banner {
+    @apply absolute left-1/2 top-4 z-20 -translate-x-1/2 rounded-full border border-emerald-200/70 bg-emerald-400 px-5 py-2 text-sm font-black uppercase tracking-wide text-emerald-950 shadow-glow;
+    animation: win-pop 1.7s ease-in-out infinite;
+  }
+
+  .table-callout {
+    @apply mx-auto mb-5 w-fit rounded-lg border border-emerald-300/30 bg-black/55 px-3 py-2 text-center text-xs font-black uppercase tracking-wide text-emerald-300 shadow-glow;
+  }
+
+  .bet-layout {
+    @apply grid grid-cols-2 gap-4 sm:grid-cols-4 xl:grid-cols-7;
+  }
+
+  .bet-target {
+    --target-color: #f8d568;
+    @apply relative flex min-h-36 flex-col items-center justify-center gap-3 rounded-2xl border border-white/15 bg-black/20 p-3 text-center shadow-casino transition hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-amber-300/40;
+  }
+
+  .bet-target-symbol {
+    @apply grid h-24 w-24 place-items-center rounded-full border-4 border-white/35 bg-white text-4xl font-black text-slate-950 shadow-inner;
+    background:
+      radial-gradient(circle at 38% 28%, rgba(255, 255, 255, 0.9), transparent 20%),
+      radial-gradient(circle at 50% 56%, color-mix(in srgb, var(--target-color) 86%, black), color-mix(in srgb, var(--target-color) 56%, black) 62%, #111827 100%);
+    color: #ffffff;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.65);
+  }
+
+  .bet-target-word {
+    @apply px-2 text-[1.35rem] leading-none;
+  }
+
+  .bet-target-flag .bet-target-symbol {
+    color: #0f172a;
+    text-shadow: none;
+  }
+
+  .bet-target-win {
+    animation: target-win 1.1s ease-in-out infinite;
+    box-shadow:
+      0 0 0 3px rgba(52, 211, 153, 0.42),
+      0 0 34px rgba(52, 211, 153, 0.55),
+      0 18px 38px rgba(0, 0, 0, 0.42);
+  }
+
+  .bet-target-win .bet-target-symbol {
+    animation: symbol-win 1.1s ease-in-out infinite;
+  }
+
+  .bet-target-pays {
+    @apply rounded-full bg-black/35 px-3 py-1 text-[11px] font-black uppercase tracking-wide text-slate-100;
+  }
+
+  .bet-chip-stack {
+    @apply pointer-events-none absolute -right-3 -top-3 h-16 w-16;
+  }
+
+  .stacked-chip {
+    --stack-index: 0;
+    @apply absolute left-1/2 grid h-12 w-12 -translate-x-1/2 place-items-center rounded-full border-[5px] border-white text-xs font-black text-slate-950 shadow-casino;
+    top: calc(var(--stack-index) * 6px);
+    background:
+      radial-gradient(circle, #ffffff 0 34%, transparent 35%),
+      conic-gradient(#ef4444 0 10%, #ffffff 10% 18%, #2563eb 18% 30%, #ffffff 30% 38%, #facc15 38% 50%, #ffffff 50% 58%, #16a34a 58% 70%, #ffffff 70% 78%, #ef4444 78% 90%, #ffffff 90% 100%);
+  }
+
+  .chip-bank {
+    @apply flex flex-wrap justify-center gap-2 border-t border-cyan-300/15 bg-slate-950/95 px-3 py-3;
+  }
+
+  .casino-chip {
+    @apply grid h-12 w-12 place-items-center rounded-full border-[5px] border-white bg-slate-100 text-xs font-black text-slate-950 shadow-casino transition hover:-translate-y-0.5;
+    background:
+      radial-gradient(circle, #ffffff 0 36%, transparent 37%),
+      conic-gradient(#ef4444 0 10%, #ffffff 10% 18%, #2563eb 18% 30%, #ffffff 30% 38%, #facc15 38% 50%, #ffffff 50% 58%, #16a34a 58% 70%, #ffffff 70% 78%, #ef4444 78% 90%, #ffffff 90% 100%);
+  }
+
+  .casino-chip-active {
+    @apply scale-110 shadow-glow ring-4 ring-amber-300/70;
+  }
+
+  .console-actions {
+    @apply grid grid-cols-1 gap-2 border-t border-white/10 bg-black/45 p-3 sm:grid-cols-[1fr_1fr_1.4fr];
+  }
+
+  .console-spin {
+    @apply sm:w-full;
+  }
+
+  .last-results {
+    @apply min-w-0 rounded-2xl border border-white/10 bg-black/45 p-3 shadow-casino;
+  }
+
+  .last-results-label {
+    @apply mb-3 flex items-center justify-between gap-3 text-xs font-black uppercase tracking-[0.18em] text-slate-400;
+  }
+
+  .last-results-label strong {
+    @apply text-amber-300;
+  }
+
+  .result-bead-row {
+    @apply flex min-h-11 gap-1 overflow-x-auto rounded-xl border border-cyan-300/15 bg-cyan-950/50 p-2;
+  }
+
+  .result-bead {
+    --bead-color: #f8d568;
+    @apply grid h-8 min-w-8 place-items-center rounded-full border-2 border-white/70 text-xs font-black text-white shadow;
+    background: radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.65), transparent 20%), var(--bead-color);
+    color: color-mix(in srgb, var(--bead-color) 20%, white);
+  }
+
+  .result-empty {
+    @apply px-2 py-2 text-xs font-bold uppercase tracking-wide text-slate-500;
+  }
+
+  .analysis-panel {
+    @apply min-w-0 rounded-2xl border border-white/10 bg-slate-950/70 p-4 shadow-casino backdrop-blur;
+  }
+
+  .analysis-heading {
+    @apply mb-4 flex items-start justify-between gap-3;
+  }
+
+  .analysis-heading .section-title {
+    @apply text-xl;
+  }
+
+  .analysis-heading > span {
+    @apply rounded-full bg-white/10 px-3 py-1 text-xs font-black text-amber-200;
+  }
+
+  .analysis-list {
+    @apply grid gap-3;
+  }
+
+  .analysis-row {
+    @apply rounded-xl border border-white/10 bg-white/5 p-3;
+  }
+
+  .analysis-row-top,
+  .analysis-meta {
+    @apply flex items-center justify-between gap-2;
+  }
+
+  .analysis-row-top strong {
+    @apply text-sm font-black text-white;
+  }
+
+  .analysis-symbol {
+    --symbol-color: #f8d568;
+    @apply inline-grid min-w-10 place-items-center rounded-full px-2 py-1 text-xs font-black text-white;
+    background: var(--symbol-color);
+    color: color-mix(in srgb, var(--symbol-color) 12%, white);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+  }
+
+  .analysis-bar {
+    @apply mt-3 h-2 overflow-hidden rounded-full bg-black/45;
+  }
+
+  .analysis-bar span {
+    @apply block h-full rounded-full bg-amber-300;
+  }
+
+  .analysis-meta {
+    @apply mt-2 text-[11px] font-bold text-slate-400;
+  }
+
+  .odds-table {
+    @apply w-full min-w-[680px] border-separate border-spacing-0 text-left text-sm;
+  }
+
+  .odds-table th {
+    @apply border-b border-white/10 bg-white/5 px-4 py-3 text-xs font-black uppercase tracking-wide text-slate-400;
+  }
+
+  .odds-table td {
+    @apply border-b border-white/10 px-4 py-3 text-slate-200;
+  }
+
+  .worst-row td {
+    @apply bg-red-500/10 text-red-100;
+  }
+
+  .editor-row {
+    @apply grid grid-cols-2 gap-2 rounded-xl border border-white/10 bg-white/5 p-2 sm:grid-cols-[1.2fr_0.8fr_0.8fr_64px];
+  }
+
+  @keyframes win-pop {
+    0%,
+    100% {
+      transform: translateX(-50%) scale(1);
+    }
+    50% {
+      transform: translateX(-50%) scale(1.06);
+    }
+  }
+
+  @keyframes target-win {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.035);
+    }
+  }
+
+  @keyframes symbol-win {
+    0%,
+    100% {
+      box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.32), 0 0 0 rgba(52, 211, 153, 0);
+    }
+    50% {
+      box-shadow: inset 0 0 22px rgba(255, 255, 255, 0.5), 0 0 32px rgba(52, 211, 153, 0.72);
+    }
+  }
+}
