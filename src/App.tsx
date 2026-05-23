@@ -10,6 +10,8 @@ import { ProbabilityTable } from "./components/ProbabilityTable";
 import { StatsPanel, type Stats } from "./components/StatsPanel";
 import { WheelEditor } from "./components/WheelEditor";
 import { defaultWheel, defaultWheelStopOrder, type WheelSlice } from "./data/defaultWheel";
+import { LegalPage } from "./pages/LegalPage";
+import { getLegalPageByPath } from "./pages/legalPages";
 import { CasinoAudio } from "./utils/casinoAudio";
 import { getTotalStops } from "./utils/probability";
 import { getStopAngle, selectWeightedResult, type WheelStop } from "./utils/spinWheel";
@@ -32,6 +34,7 @@ const WHEEL_SOUND_DURATION_MS = 5000;
 type RoundPhase = "betting" | "spinning" | "result";
 
 function App() {
+  const [currentPath, setCurrentPath] = useState(() => window.location.pathname);
   const [wheel, setWheel] = useState<WheelSlice[]>(cloneDefaultWheel);
   const [bets, setBets] = useState<BetMap>({});
   const [lastBets, setLastBets] = useState<BetMap>({});
@@ -50,6 +53,7 @@ function App() {
   const [soundEnabled, setSoundEnabled] = useState(false);
   const nextSpinDirection = useRef<1 | -1>(1);
   const audio = useRef(new CasinoAudio());
+  const legalPage = getLegalPageByPath(currentPath);
 
   const totalStops = getTotalStops(wheel);
   const useDefaultStopOrder =
@@ -83,6 +87,29 @@ function App() {
     if (entries.length === 0) return "-";
     return entries.reduce((best, entry) => (entry[1] > best[1] ? entry : best))[0];
   }, [stats.resultCounts]);
+
+  useEffect(() => {
+    const onPopState = () => setCurrentPath(window.location.pathname);
+
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
+  useEffect(() => {
+    const metaDescription = document.querySelector('meta[name="description"]');
+
+    if (legalPage) {
+      document.title = legalPage.metaTitle;
+      metaDescription?.setAttribute("content", legalPage.metaDescription);
+      return;
+    }
+
+    document.title = "Big Six Wheel Simulator – Odds, Payouts & House Edge Calculator";
+    metaDescription?.setAttribute(
+      "content",
+      "Simulate a Big Six casino-style wheel, explore odds, payouts, probabilities, and house edge using virtual credits. Educational probability simulator only.",
+    );
+  }, [legalPage]);
 
   const placeBet = (id: string) => {
     if (roundPhase !== "betting" || totalBet + selectedChip > balance) return;
@@ -180,6 +207,8 @@ function App() {
   }, [soundEnabled]);
 
   useEffect(() => {
+    if (legalPage) return;
+
     if (roundPhase === "betting") {
       setCountdown(BETTING_SECONDS);
       const idleRotation = window.setInterval(() => {
@@ -215,7 +244,7 @@ function App() {
         window.clearTimeout(nextRoundTimer);
       };
     }
-  }, [roundPhase, spin]);
+  }, [legalPage, roundPhase, spin]);
 
   const resetSession = () => {
     setBalance(1000);
@@ -243,59 +272,63 @@ function App() {
         soundEnabled={soundEnabled}
         onToggleSound={() => setSoundEnabled((current) => !current)}
       />
-      <main className="mx-auto grid max-w-7xl gap-5 px-4 py-6 sm:px-6 lg:grid-cols-[1fr_300px] lg:px-8">
-        <div className="grid min-w-0 gap-5">
+      {legalPage ? (
+        <LegalPage page={legalPage} />
+      ) : (
+        <main className="mx-auto grid max-w-7xl gap-5 px-4 py-6 sm:px-6 lg:grid-cols-[1fr_300px] lg:px-8">
           <div className="grid min-w-0 gap-5">
-            <BigSixWheel
-              wheel={wheel}
-              stopOrder={visualStopOrder}
-              rotation={rotation}
-              isSpinning={isSpinning}
-              lastResult={lastResult}
-            />
             <div className="grid min-w-0 gap-5">
-              <BetSelector
+              <BigSixWheel
                 wheel={wheel}
-                bets={bets}
-                selectedChip={selectedChip}
-                balance={balance}
-                totalBet={totalBet}
-                canSpin={roundPhase === "betting"}
-                canRestoreLastBets={canRestoreLastBets}
-                roundPhase={roundPhase}
-                countdown={countdown}
-                winningBetId={winningBetId}
-                lastWinPayout={lastWinPayout}
-                onChipChange={setSelectedChip}
-                onPlaceBet={placeBet}
-                onClearBets={clearBets}
-                onRestoreLastBets={restoreLastBets}
+                stopOrder={visualStopOrder}
+                rotation={rotation}
+                isSpinning={isSpinning}
+                lastResult={lastResult}
               />
-              <LastResultsRail results={resultHistory} />
-              <StatsPanel
-                stats={stats}
-                lastDelta={lastDelta}
-                mostFrequentResult={mostFrequentResult}
-                onReset={resetSession}
-              />
+              <div className="grid min-w-0 gap-5">
+                <BetSelector
+                  wheel={wheel}
+                  bets={bets}
+                  selectedChip={selectedChip}
+                  balance={balance}
+                  totalBet={totalBet}
+                  canSpin={roundPhase === "betting"}
+                  canRestoreLastBets={canRestoreLastBets}
+                  roundPhase={roundPhase}
+                  countdown={countdown}
+                  winningBetId={winningBetId}
+                  lastWinPayout={lastWinPayout}
+                  onChipChange={setSelectedChip}
+                  onPlaceBet={placeBet}
+                  onClearBets={clearBets}
+                  onRestoreLastBets={restoreLastBets}
+                />
+                <LastResultsRail results={resultHistory} />
+                <StatsPanel
+                  stats={stats}
+                  lastDelta={lastDelta}
+                  mostFrequentResult={mostFrequentResult}
+                  onReset={resetSession}
+                />
+              </div>
             </div>
+            <div className="lg:hidden">
+              <OutcomeAnalysis wheel={wheel} results={resultHistory} />
+            </div>
+            <ProbabilityTable wheel={wheel} />
+            <div className="ad-slot">Reserved content ad placement</div>
+            <EducationSection />
+            <WheelEditor wheel={wheel} onChange={setWheel} onRestore={restoreDefaults} />
           </div>
-          <div className="lg:hidden">
-            <OutcomeAnalysis wheel={wheel} results={resultHistory} />
-          </div>
-          <ProbabilityTable wheel={wheel} />
-          <div className="ad-slot">Reserved content ad placement</div>
-          <EducationSection />
-          <WheelEditor wheel={wheel} onChange={setWheel} onRestore={restoreDefaults} />
-        </div>
-        <aside className="hidden lg:block">
-          <div className="grid gap-5">
-            <div className="ad-slot min-h-[360px]">Reserved sidebar ad placement</div>
-            <OutcomeAnalysis wheel={wheel} results={resultHistory} />
-            <div className="ad-slot min-h-[360px]">Reserved sidebar ad placement</div>
-          </div>
-        </aside>
-      </main>
+          <aside className="hidden lg:block">
+            <div className="grid gap-5">
+              <div className="ad-slot min-h-[360px]">Reserved sidebar ad placement</div>
+              <OutcomeAnalysis wheel={wheel} results={resultHistory} />
+              <div className="ad-slot min-h-[360px]">Reserved sidebar ad placement</div>
+            </div>
+          </aside>
+        </main>
+      )}
       <Footer />
     </div>
   );
