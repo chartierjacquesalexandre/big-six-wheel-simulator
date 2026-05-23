@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://big-six-wheel-simulator.vercel.app/sitemap.xml
