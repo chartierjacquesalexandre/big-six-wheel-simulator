@@ -16,7 +16,7 @@ export type LegalPageContent = {
 };
 
 export const siteUrl = "https://big-six-wheel-simulator.vercel.app";
-export const contactEmail = "contact@example.com";
+export const contactEmail = "support@vsysteme.ca";
 
 export const legalPages: LegalPageContent[] = [
   {
@@ -44,11 +44,11 @@ export const legalPages: LegalPageContent[] = [
         ],
       },
       {
-        heading: "Analytics and advertising placeholders",
+        heading: "Analytics and advertising",
         paragraphs: [
           "Analytics or advertising tools may be added later to understand site usage or support the operation of the site.",
-          "Google Analytics placeholder: if enabled in the future, Google Analytics may collect general usage data such as page views, device type, approximate location, and referral sources.",
-          "Google AdSense placeholder: if enabled in the future, Google AdSense may use cookies or similar technologies to serve and measure ads according to Google's policies.",
+          "Google Analytics: if enabled in the future, Google Analytics may collect general usage data such as page views, device type, approximate location, and referral sources.",
+          "Google AdSense: if enabled in the future, Google AdSense may use cookies or similar technologies to serve and measure ads according to Google's policies.",
         ],
       },
       {
@@ -61,7 +61,7 @@ export const legalPages: LegalPageContent[] = [
       {
         heading: "Contact",
         paragraphs: [
-          `For privacy questions, contact the site owner at ${contactEmail}. Replace this placeholder with the correct contact email before publishing formal legal notices.`,
+          `For privacy questions, contact the site owner at ${contactEmail}.`,
         ],
       },
     ],
@@ -165,13 +165,13 @@ export const legalPages: LegalPageContent[] = [
     metaDescription:
       "Contact information for Big Six Wheel Simulator. No contact form is currently provided.",
     intro:
-      "For questions about Big Six Wheel Simulator, use the placeholder contact email below.",
+      "For questions, feedback, corrections, or support inquiries about Big Six Wheel Simulator, please contact us by email.",
     sections: [
       {
         heading: "Email",
         paragraphs: [
           `Contact email: ${contactEmail}`,
-          "A contact form is not available yet. Replace this placeholder address with the correct site owner email before publishing formal contact information.",
+          "Big Six Wheel Simulator is an educational probability simulator only. It does not offer gambling services, real-money betting, deposits, withdrawals, or casino accounts.",
         ],
       },
     ],

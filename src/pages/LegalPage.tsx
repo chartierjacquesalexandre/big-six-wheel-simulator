@@ -1,10 +1,26 @@
-import type { LegalPageContent } from "./legalPages";
+import { contactEmail, type LegalPageContent } from "./legalPages";
 
 type Props = {
   page: LegalPageContent;
 };
 
 export function LegalPage({ page }: Props) {
+  const renderParagraph = (paragraph: string) => {
+    if (!paragraph.includes(contactEmail)) return paragraph;
+
+    const [before, after] = paragraph.split(contactEmail);
+
+    return (
+      <>
+        {before}
+        <a className="font-bold text-amber-300 transition hover:text-amber-200" href={`mailto:${contactEmail}`}>
+          {contactEmail}
+        </a>
+        {after}
+      </>
+    );
+  };
+
   return (
     <main className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
       <section className="panel">
@@ -18,7 +34,7 @@ export function LegalPage({ page }: Props) {
               <h2 className="text-xl font-black text-white">{section.heading}</h2>
               <div className="mt-3 space-y-3">
                 {section.paragraphs.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                  <p key={paragraph}>{renderParagraph(paragraph)}</p>
                 ))}
               </div>
             </article>
