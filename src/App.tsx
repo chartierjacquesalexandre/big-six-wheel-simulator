@@ -10,6 +10,8 @@ import { ProbabilityTable } from "./components/ProbabilityTable";
 import { StatsPanel, type Stats } from "./components/StatsPanel";
 import { WheelEditor } from "./components/WheelEditor";
 import { defaultWheel, defaultWheelStopOrder, type WheelSlice } from "./data/defaultWheel";
+import { EducationArticlePage } from "./pages/EducationArticlePage";
+import { getEducationArticleByPath } from "./pages/educationArticles";
 import { LegalPage } from "./pages/LegalPage";
 import { getLegalPageByPath } from "./pages/legalPages";
 import { CasinoAudio } from "./utils/casinoAudio";
@@ -54,6 +56,7 @@ function App() {
   const nextSpinDirection = useRef<1 | -1>(1);
   const audio = useRef(new CasinoAudio());
   const legalPage = getLegalPageByPath(currentPath);
+  const educationArticle = getEducationArticleByPath(currentPath);
 
   const totalStops = getTotalStops(wheel);
   const useDefaultStopOrder =
@@ -104,12 +107,18 @@ function App() {
       return;
     }
 
+    if (educationArticle) {
+      document.title = educationArticle.metaTitle;
+      metaDescription?.setAttribute("content", educationArticle.metaDescription);
+      return;
+    }
+
     document.title = "Big Six Wheel Simulator – Odds, Payouts & House Edge Calculator";
     metaDescription?.setAttribute(
       "content",
       "Simulate a Big Six casino-style wheel, explore odds, payouts, probabilities, and house edge using virtual credits. Educational probability simulator only.",
     );
-  }, [legalPage]);
+  }, [educationArticle, legalPage]);
 
   const placeBet = (id: string) => {
     if (roundPhase !== "betting" || totalBet + selectedChip > balance) return;
@@ -207,7 +216,7 @@ function App() {
   }, [soundEnabled]);
 
   useEffect(() => {
-    if (legalPage) return;
+    if (legalPage || educationArticle) return;
 
     if (roundPhase === "betting") {
       setCountdown(BETTING_SECONDS);
@@ -244,7 +253,7 @@ function App() {
         window.clearTimeout(nextRoundTimer);
       };
     }
-  }, [legalPage, roundPhase, spin]);
+  }, [educationArticle, legalPage, roundPhase, spin]);
 
   const resetSession = () => {
     setBalance(1000);
@@ -274,6 +283,8 @@ function App() {
       />
       {legalPage ? (
         <LegalPage page={legalPage} />
+      ) : educationArticle ? (
+        <EducationArticlePage article={educationArticle} />
       ) : (
         <main className="mx-auto grid max-w-7xl gap-5 px-4 py-6 sm:px-6 lg:grid-cols-[1fr_300px] lg:px-8">
           <div className="grid min-w-0 gap-5">

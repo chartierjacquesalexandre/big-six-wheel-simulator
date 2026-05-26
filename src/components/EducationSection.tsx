@@ -9,6 +9,14 @@ export function EducationSection() {
           payout rules, and virtual credits. It is built for probability
           education, not real-money play.
         </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <a className="secondary-button" href="/big-six-wheel-odds">
+            Read the odds guide
+          </a>
+          <a className="secondary-button" href="/big-six-wheel-house-edge">
+            Read the house edge guide
+          </a>
+        </div>
       </div>
 
       <div className="mt-6 grid gap-5 text-sm leading-7 text-slate-300 lg:grid-cols-2">
